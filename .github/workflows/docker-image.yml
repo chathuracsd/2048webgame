@@ -16,5 +16,5 @@ jobs:
     - name: Build & Push Image
       run: |
         echo "${{ secrets.YN }}" | docker login -u chathuracsddocker --password-stdin
-        docker build -t chathuracsddocker/2048webgame/2048game:latest .
-        docker push chathuracsddocker/2048webgame/2048webgame:latest
+        docker build -t docker.io/chathuracsddocker/2048webgame/2048game:latest .
+        docker push docker.io/chathuracsddocker/2048webgame/2048webgame:latest
