@@ -1,46 +1,46 @@
 pipeline{
+	agent any
 
-	agent {label 'main'}
+	environment{
+		dockerImage =''
+		registry = 'chathuracsddocker/2048gameapp'
+		registryCredential = 'dockerhub'
 
-	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
 	}
 
-	stages {
-	    
-	    stage('gitclone') {
+	stages{
 
-			steps {
-				git 'https://github.com/chathuracsd/2048webgame.git'
+		stage('Checkout'){
+			steps{
+			checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/chathuracsd/2048webgame.git']])
 			}
 		}
 
-		stage('Build') {
+		stage('Build Docker Image'){
+			steps{
+				script{
+					dockerImage = docker.build registry
 
-			steps {
-				sh 'docker build -t chathuracsddocker/2048webapp:latest .'
+				}
 			}
+
 		}
 
-		stage('Login') {
+		stage('Push to DockerHub'){
+			steps{
+				script{
+					docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+					}
 
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+				}
 			}
+
+
 		}
 
-		stage('Push') {
 
-			steps {
-				sh 'docker push chathuracsddocker/2048webapp:latest'
-			}
-		}
 	}
-
-	post {
-		always {
-			sh 'docker logout'
-		}
-	}
+  
 
 }
