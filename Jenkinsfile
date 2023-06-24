@@ -3,7 +3,7 @@ pipeline{
 
 	environment{
 		dockerImage =''
-		registry = 'chathuracsddocker/2048gameapp'
+		registry = 'chathuracsddocker/webapp2028'
 		registryCredential = 'dockerhub'
 
 	}

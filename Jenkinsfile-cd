@@ -1,0 +1,28 @@
+pipeline {
+  
+  agent any
+
+  stages{
+    
+    stage('Github Repo Conncet'){
+      steps{
+           script{
+               checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/chathuracsd/2048webgame.git']])
+               sh 'cat deployment-service.yaml'
+             }
+			
+            }
+	}
+
+    stage('Deploy App on minikube') {
+      steps {
+            
+            script{
+             kubernetesDeploy(configs: "deployment-service.yaml", kubeconfigId: "kube-access")
+            }
+        }
+    }
+
+
+    }
+}
